@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://www.example.com/funds"
+        xmlns:tns="http://www.example.com/funds"
+        elementFormDefault="qualified">
+
+    <element name="mineral" abstract="true"/>
+    <element name="precious" type="tns:Precious" substitutionGroup="tns:mineral"/>
+    <element name="semiprecious" type="tns:Semiprecious" substitutionGroup="tns:mineral"/>
+
+    <element name="gems">
+        <complexType>
+            <sequence>
+                <element ref="tns:mineral" minOccurs="16" maxOccurs="unbounded"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <complexType name="Mineral">
+        <sequence>
+            <element name="visual-parameters" type="tns:VisualParameters"/>
+            <element name="value" type="tns:Value"/>
+            <element name="date-of-processing" type="date"/>
+        </sequence>
+        <attribute name="origin" type="tns:Origin"/>
+    </complexType>
+
+    <complexType name="VisualParameters">
+        <sequence>
+            <element name="color" type="string"/>
+            <element name="transparency" type="tns:Transparency"/>
+            <element name="cut" type="tns:Cut"/>
+        </sequence>
+    </complexType>
+
+    <simpleType name="Value">
+        <restriction base="string">
+            <pattern value="([0-9]+)(.([0-9]+))?"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="Name">
+        <restriction base="string">
+            <pattern value="([a-zA-Z]{4,20})"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="Transparency">
+        <restriction base="string">
+            <pattern value="[0-9]||([1-9][0-9])||[100]"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="Cut">
+        <restriction base="string">
+            <pattern value="[1-9]||[1-8][0-9]"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="Origin">
+        <restriction base="string">
+            <pattern value="[A-Z][a-zA-Z]+]{2,30}"/>
+        </restriction>
+    </simpleType>
+
+    <complexType name="Semiprecious">
+        <complexContent>
+            <extension base="tns:Mineral">
+                <attribute name="name" type="tns:Name" use="required"/>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <complexType name="Precious">
+        <complexContent>
+            <extension base="tns:Mineral">
+                <attribute name="name" use="optional" default="diamond">
+                    <simpleType>
+                        <restriction base="string">
+                            <enumeration value="alexandrite"></enumeration>
+                            <enumeration value="diamond"></enumeration>
+                            <enumeration value="emerald"></enumeration>
+                            <enumeration value="ruby"></enumeration>
+                            <enumeration value="sapphire"></enumeration>
+                            <enumeration value="chrysoberyl"></enumeration>
+                        </restriction>
+                    </simpleType>
+                </attribute>
+            </extension>
+        </complexContent>
+    </complexType>
+</schema>
