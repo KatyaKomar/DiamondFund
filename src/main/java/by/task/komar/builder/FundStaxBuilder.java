@@ -1,7 +1,11 @@
-package by.task.komar.parser;
+package by.task.komar.builder;
 
+import by.task.komar.exception.FundException;
 import by.task.komar.fund.*;
 import by.task.komar.handler.FundXmlTag;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -12,23 +16,18 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
-public class FundStaxBuilder {
-    private Set<Mineral> minerals;
+public class FundStaxBuilder extends AbstractFundBuilder {
+    private static Logger logger = LogManager.getLogger();
     private XMLInputFactory inputFactory;
 
     public FundStaxBuilder() {
+        super();
         inputFactory = XMLInputFactory.newInstance();
-        minerals = new HashSet<>();
     }
 
-    public Set<Mineral> getMinerals() {
-        return minerals;
-    }
-
-    public void buildSetMinerals(String filename) {
+    @Override
+    public void buildSetMinerals(String filename) throws FundException {
         XMLStreamReader reader;
         String name;
         try (FileInputStream inputStream = new FileInputStream(new File(filename))) {
@@ -47,10 +46,13 @@ public class FundStaxBuilder {
                 }
             }
         } catch (XMLStreamException | FileNotFoundException ex) {
-            ex.printStackTrace();
+            logger.log(Level.ERROR, "Error in Stax: " + ex.getMessage());
+            throw new FundException("Error in Stax: " + ex.getMessage());
         } catch (IOException ex) {
-            ex.printStackTrace();
+            logger.log(Level.ERROR, "Error in Stax, check your filename: " + filename);
+            throw new FundException("Error in Stax, check your filename: " + filename);
         }
+        logger.log(Level.INFO, "Minerals from stax builder are:\n" + minerals);
     }
 
     private Precious buildPrecious(XMLStreamReader reader) throws XMLStreamException {
@@ -93,8 +95,8 @@ public class FundStaxBuilder {
                     name = reader.getLocalName();
                     if (FundXmlTag.valueOf(name.toUpperCase().replace("-", "_")) == FundXmlTag.PRECIOUS ||
                             FundXmlTag.valueOf(name.toUpperCase().replace("-", "_")) == FundXmlTag.SEMIPRECIOUS) {
-                    return;
-                }
+                        return;
+                    }
             }
         }
         throw new XMLStreamException("Unknown element in tag <precious>");
@@ -131,9 +133,9 @@ public class FundStaxBuilder {
         throw new XMLStreamException("Unknown element in tag <visual-parameters>");
     }
 
-    private String getXMLText(XMLStreamReader reader) throws XMLStreamException{
+    private String getXMLText(XMLStreamReader reader) throws XMLStreamException {
         String text = null;
-        if(reader.hasNext()){
+        if (reader.hasNext()) {
             reader.next();
             text = reader.getText();
         }

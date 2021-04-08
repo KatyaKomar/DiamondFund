@@ -59,7 +59,7 @@
 
     <simpleType name="Origin">
         <restriction base="string">
-            <pattern value="[A-Z][a-zA-Z]+]{2,30}"/>
+            <pattern value="[A-Z][a-zA-Z]{2,30}"/>
         </restriction>
     </simpleType>
 

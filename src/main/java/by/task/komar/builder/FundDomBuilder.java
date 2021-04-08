@@ -1,6 +1,10 @@
-package by.task.komar.parser;
+package by.task.komar.builder;
 
+import by.task.komar.exception.FundException;
 import by.task.komar.fund.*;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -12,28 +16,29 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Set;
 
-public class FundDomBuilder {
-    private Set<Mineral> minerals;
+public class FundDomBuilder extends AbstractFundBuilder {
+    private static Logger logger = LogManager.getLogger();
     private DocumentBuilder documentBuilder;
 
+    @Override
+    public Set<Mineral> getMinerals() {
+        return super.getMinerals();
+    }
+
     public FundDomBuilder() {
-        minerals = new HashSet<>();
+        super();
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
             documentBuilder = factory.newDocumentBuilder();
         } catch (ParserConfigurationException ex) {
-            ex.printStackTrace();
+            logger.log(Level.ERROR, "Error in Dom: " + ex.getMessage());
         }
     }
 
-    public Set<Mineral> getMinerals() {
-        return minerals;
-    }
-
-    public void buildSetMinerals(String filename) {
+    @Override
+    public void buildSetMinerals(String filename) throws FundException {
         Document doc;
         try {
             doc = documentBuilder.parse(filename);
@@ -50,9 +55,14 @@ public class FundDomBuilder {
                 Precious mineral = buildPrecious(mineralElement);
                 minerals.add(mineral);
             }
-        } catch (IOException | SAXException ex) {
-            ex.printStackTrace();
+        } catch (IOException ex) {
+            logger.log(Level.ERROR, "Error in Dom, check your filename: " + filename);
+            throw new FundException("Error in Dom, check your filename: " + filename);
+        } catch (SAXException ex) {
+            logger.log(Level.ERROR, "Error in Dom: " + ex.getMessage());
+            throw new FundException("Error in Dom: " + ex.getMessage());
         }
+        logger.log(Level.INFO, "Minerals from dom builder are:\n" + minerals);
     }
 
     private Semiprecious buildSemiprecious(Element element) {
@@ -70,7 +80,7 @@ public class FundDomBuilder {
         return precious;
     }
 
-    private void build(Element element, Mineral mineral){
+    private void build(Element element, Mineral mineral) {
         mineral.setOrigin(element.getAttribute("origin"));
         VisualParameters parameters = mineral.getParameters();
         Element parametersElement = (Element) element.getElementsByTagName("visual-parameters").item(0);
@@ -89,4 +99,3 @@ public class FundDomBuilder {
         return text;
     }
 }
-
