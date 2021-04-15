@@ -5,7 +5,6 @@ import by.task.komar.fund.Name;
 import by.task.komar.fund.Precious;
 import by.task.komar.fund.Semiprecious;
 import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.time.LocalDate;
@@ -52,7 +51,7 @@ public class FundHandler extends DefaultHandler {
     }
 
     @Override
-    public void endElement(String uri, String localName, String qName) throws SAXException {
+    public void endElement(String uri, String localName, String qName) {
         if (FundXmlTag.PRECIOUS.getTitle().equals(qName)
                 || FundXmlTag.SEMIPRECIOUS.getTitle().equals(qName)) {
             minerals.add(current);
@@ -60,7 +59,7 @@ public class FundHandler extends DefaultHandler {
     }
 
     @Override
-    public void characters(char[] ch, int start, int length) throws SAXException {
+    public void characters(char[] ch, int start, int length) {
         String data = new String(ch, start, length).strip();
         if (currentXmlTag != null) {
             switch (currentXmlTag) {

@@ -8,7 +8,7 @@ import org.testng.annotations.Test;
 import static by.task.komar.builder.FundBuilderFactory.createFundBuilder;
 
 public class FundSaxBuilderTest {
-    AbstractFundBuilder builder;
+    private AbstractFundBuilder builder;
 
     @Test(expectedExceptions = FundException.class)
     public void testFundException() throws FundException {

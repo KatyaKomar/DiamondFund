@@ -1,7 +1,6 @@
 package by.task.komar.fund;
 
 import java.time.LocalDate;
-import java.util.Objects;
 
 public abstract class Mineral {
 
@@ -48,23 +47,31 @@ public abstract class Mineral {
         if (o == null || getClass() != o.getClass()) return false;
         Mineral mineral = (Mineral) o;
         return Double.compare(mineral.value, value) == 0 &&
-                Objects.equals(origin, mineral.origin) &&
-                Objects.equals(parameters, mineral.parameters) &&
-                Objects.equals(date, mineral.date);
+                origin.equals(mineral.origin) &&
+                parameters.equals(mineral.parameters) &&
+                date.equals(mineral.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(origin, parameters, value, date);
+        int result = 11;
+        result = 37 * result + (origin == null ? 0 : origin.hashCode());
+        result = 37 * result + parameters.hashCode();
+        long longBits = Double.doubleToLongBits(value);
+        result = 37 * result + (int) (longBits - (longBits >>> 32));
+        result = 37 * result + date.hashCode();
+        return result;
     }
 
     @Override
     public String toString() {
-        return "Mineral{" +
-                ", origin='" + origin + '\'' +
-                ", parameters=" + parameters +
-                ", value=" + value +
-                ", date=" + date +
-                '}';
+        StringBuilder builder = new StringBuilder();
+        builder.append("Mineral{");
+        builder.append("origin=").append(origin);
+        builder.append(", parameters=").append(parameters);
+        builder.append(", value=").append(value);
+        builder.append(", date=").append(date);
+        builder.append('}');
+        return builder.toString();
     }
 }

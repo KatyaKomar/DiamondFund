@@ -1,7 +1,5 @@
 package by.task.komar.fund;
 
-import java.util.Objects;
-
 public class VisualParameters {
     private String color;
     private int transparency;
@@ -16,20 +14,28 @@ public class VisualParameters {
     public VisualParameters() {
     }
 
+    public String getColor() {
+        return color;
+    }
+
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public int getTransparency() {
+        return transparency;
     }
 
     public void setTransparency(int transparency) {
         this.transparency = transparency;
     }
 
-    public void setCut(int cut) {
-        this.cut = cut;
+    public int getCut() {
+        return cut;
     }
 
-    public String getColor() {
-        return color;
+    public void setCut(int cut) {
+        this.cut = cut;
     }
 
     @Override
@@ -39,28 +45,26 @@ public class VisualParameters {
         VisualParameters that = (VisualParameters) o;
         return transparency == that.transparency &&
                 cut == that.cut &&
-                Objects.equals(color, that.color);
+                color.equals(that.color);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(color, transparency, cut);
-    }
-
-    public int getTransparency() {
-        return transparency;
-    }
-
-    public int getCut() {
-        return cut;
+        int result = 11;
+        result = 37 * result + (color == null ? 0 : color.hashCode());
+        result = 37 * result + transparency;
+        result = 37 * result + cut;
+        return result;
     }
 
     @Override
     public String toString() {
-        return "VisualParameters{" +
-                "color='" + color + '\'' +
-                ", transparency=" + transparency +
-                ", cut=" + cut +
-                '}';
+        StringBuilder builder = new StringBuilder();
+        builder.append("VisualParameters{");
+        builder.append("color=").append(color);
+        builder.append(", transparency=").append(transparency);
+        builder.append(", cut=").append(cut);
+        builder.append('}');
+        return builder.toString();
     }
 }
