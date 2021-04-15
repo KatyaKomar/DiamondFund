@@ -23,7 +23,7 @@ public class FundDomBuilderTest {
         String[] expectedNames = new String[]{"purple", "pink", "blue", "yellow", "pink", "red", "colorless", "purple", "brown", "green", "green", "light blue", "purple", "red", "blue", "pink"};
         String type = "DOM";
         builder = createFundBuilder(type);
-        builder.buildSetMinerals("file/fund.xml");
+        builder.buildSetMinerals("src\\main\\resources\\file\\fund.xml");
         Object[] actualColors = builder.getMinerals().stream().map(i -> i.getParameters().getColor()).toArray();
         Assert.assertEqualsNoOrder(expectedNames, actualColors);
     }

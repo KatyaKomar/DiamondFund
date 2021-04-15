@@ -23,7 +23,7 @@ public class FundStaxBuilderTest {
         String[] expectedNames = new String[]{"Russia", "China", "Brazil", "USA", "Australia", "Brazil", "Russia", "Germany", "USA", "Russia", "Colombia", "USA", "Brazil", "Thailand", "India", "China"};
         String type = "STAX";
         builder = createFundBuilder(type);
-        builder.buildSetMinerals("file/fund.xml");
+        builder.buildSetMinerals("src\\main\\resources\\file\\fund.xml");
         Object[] actualColors = builder.getMinerals().stream().map(i -> i.getOrigin()).toArray();
         Assert.assertEqualsNoOrder(expectedNames, actualColors);
     }
