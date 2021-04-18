@@ -19,7 +19,7 @@ public class XmlValidator {
     private static Logger logger = LogManager.getLogger();
 
     public boolean validate(String xmlFilePath) {
-        final String SCHEMA_NAME = "file/fund.xsd";
+        final String SCHEMA_NAME = "src\\main\\resources\\file\\fund.xsd";
         String language = XMLConstants.W3C_XML_SCHEMA_NS_URI;
         SchemaFactory factory = SchemaFactory.newInstance(language);
         File schemaLocation = new File(SCHEMA_NAME);
